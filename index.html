@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Disparo de Amor</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to bottom, #220033, #1a0033);
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="heartCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("heartCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const heartPositions = [];
+    for (let i = 0; i < 100; i++) {
+      const x = 100 + i * 10;
+      const y = canvas.height / 2 + 100 * Math.sin(i * 0.2);
+      heartPositions.push({ x, y });
+    }
+
+    const osito = new Image();
+    osito.src = "https://i.ibb.co/vcmWwFz/osito.png"; // Puedes cambiar por tu propia imagen
+
+    let currentShot = 0;
+
+    function drawHeart(x, y) {
+      ctx.fillStyle = "red";
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawBear() {
+      ctx.drawImage(osito, 40, canvas.height / 2 - 50, 80, 80);
+    }
+
+    function shootHeart() {
+      const heart = heartPositions[currentShot];
+      drawHeart(heart.x, heart.y);
+      currentShot++;
+    }
+
+    function startShooting() {
+      const interval = setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBear();
+        if (currentShot >= heartPositions.length) {
+          clearInterval(interval);
+          return;
+        }
+        shootHeart();
+      }, 120);
+    }
+
+    osito.onload = () => {
+      startShooting();
+    };
+  </script>
+</body>
+</html>
